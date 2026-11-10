@@ -141,214 +141,115 @@
             <button class="ribbon-btn" onclick="toggleViewMode('excel')">📊 엑셀표 보기</button>
         </div>
 
-        A
-B
-C
-D
-E (실시간 밴쿠버 교민 지표 요약 및 브리핑)
-🇨🇦 밴쿠버 한인 생활 밀착형 주식/경제 계산기
-
-
-💱 실시간 캐나다 역송금 정산기
-캐나다 달러 (CAD)
-계산하는 중...
-
-
-🍔 BC주 식당 외식/팁 계산기
-메뉴판 원금액 ($)
-계산하는 중...
-
-
-📉 주식 평단가 물타기 계산기
-
-
-
-
-계산하는 중...
-
-
-📋 밴쿠버 존버마을 실시간 탕비실
-
-기본
-Teams
-카톡
-
-
-전송
-
-📊 market_movers
-
-📁 vancouver_life_calculator
-준비 완료 | 자동 저장 켬
-const gridDataRows = [
-{ type: 'title', label: '[1. 실시간 밴쿠버 금융 환율 레이더]' },
-{ type: 'data', code: 'CAD/KRW', name: '캐나다 달러 ➡️ 원화 송금', val: 1022.45, change: '+3.15', class: 'up', vol: '12,504,000' },
-{ type: 'data', code: 'USD/CAD', name: '미국 달러 ➡️ 캐나다 달러 환전', val: 1.3842, change: '-0.0021', class: 'down', vol: '8,421,000' },
-{ type: 'title', label: '[2. 캐나다 정규장 주요 지표 (TSX)]' },
-{ type: 'data', code: 'VFV.TO', name: 'Vanguard 미국 S&P500 (CAD)', val: 142.35, change: '+0.58%', class: 'up', vol: '412,000' },
-{ type: 'data', code: 'TD.TO', name: 'TD Bank Group 캐나다 주식', val: 78.42, change: '-1.15%', class: 'down', vol: '1,895,000' },
-{ type: 'title', label: '[3. 미국 정규장 / 야간 선물 거래 동향]' },
-{ type: 'data', code: 'NVDA', name: 'Nvidia Corp (엔비디아)', val: 145.26, change: '+3.42%', class: 'up', vol: '42,105,000' },
-{ type: 'data', code: 'TSLA', name: 'Tesla Inc (테슬라)', val: 268.40, change: '+1.85%', class: 'up', vol: '19,540,000' },
-{ type: 'title', label: '[4. 글로벌 가상자산 실시간 시세]' },
-{ type: 'data', code: 'BTC/USD', name: 'Bitcoin (비트코인 달러)', val: 87450.00, change: '+2.15%', class: 'up', vol: '45,210' },
-{ type: 'title', label: '[5. 밴쿠버 현지 생활 환경 인덱스]' },
-{ type: 'weather', code: 'WEATHER', name: '🌧️ 메트로 밴쿠버 실시간 기상청', val: '오후 강수확률 90%', change: '레인쿠버 우산 필수', class: 'up', vol: 'Rainy' },
-{ type: 'traffic', code: 'SKYTRAIN', name: '🚇 TransLink 스카이트레인 현황', val: 'Expo / Millennium Line', change: '정상 운행', class: 'down', vol: 'Normal' },
-{ type: 'ad', code: '[광고]', name: '이곳에 한줄 광고를 넣어주실 밴쿠버 광고주를 모십니다.', val: '문의하기', change: '$100/월', class: 'up', vol: '영업중' }
-];
-const mockConversations = [
-"오늘 다운타운 랍슨 H-마트 공동구매 물품 들어왔나요?",
-"버나비 사는데 오늘 스카이트레인 출근길 연착 없어서 다행이네요.",
-"엔비디아 프리마켓 쏘는 거 보고 소수점 주식이라도 탑승했습니다.",
-"이번 달 코퀴틀람 렌트비 송금해야 하는데 환율 왜 이리 높나요 ㅠㅠ",
-"다들 모니터 조심하세요 부장님 지나가면 상단 리본바 새로고침 클릭하셈 ㅋㅋ",
-"밴쿠버 워홀러인데 이 사이트 덕분에 오피스 일하는 척 주식하기 개꿀이네요."
-];
-const randomNickPrefix = ["다운타운", "버나비", "코퀴틀람", "리치먼드", "노스밴", "서리개미", "워홀러", "UBC유학생"];
-window.addEventListener('DOMContentLoaded', () => {
-renderExcelGridTable();
-startLiveClockSystem();
-initializeMockChatTimeline();
-runCalculator('fx');
-runCalculator('tip');
-runCalculator('stock');
-document.querySelectorAll('.excel-table td').forEach(cell => {
-cell.addEventListener('click', (e) => {
-const row = e.target.parentElement.rowIndex;
-const colLetter = String.fromCharCode(65 + e.target.cellIndex - 1);
-if(e.target.cellIndex > 0) {
-document.getElementById('activeCellAddress').innerText = ${colLetter}${row};
-document.getElementById('formulaDisplay').value = e.target.innerText;
-}
-});
-});
-});
-function renderExcelGridTable() {
-const body = document.getElementById('excelGridBody');
-body.innerHTML = '';
-gridDataRows.forEach((row, index) => {
-const tr = document.createElement('tr');
-tr.appendChild(createHeaderCell(index + 1, true));
-if (row.type === 'title') {
-const td = document.createElement('td');
-td.colSpan = 5; td.className = 'section-title';
-td.innerText = row.label;
-tr.appendChild(td);
-} else if (row.type === 'ad') {
-tr.innerHTML += `
-${row.code}
-${row.name}
-${row.val}
-${row.change}
-${row.vol}
-; } else { const isCrypto = row.code.includes('/'); const formattedVal = typeof row.val === 'number' ? (isCrypto ? row.val.toFixed(2) : row.val.toLocaleString()) : row.val; tr.innerHTML += 
-${row.code}
-${row.name}
-${formattedVal}
-${row.change}
-${row.vol}
-`;
-}
-body.appendChild(tr);
-});
-}
-function createHeaderCell(text, isRowNum = false) {
-const th = document.createElement('th');
-th.innerText = text;
-if (isRowNum) th.className = 'row-num';
-return th;
-}
-function startLiveClockSystem() {
-const clockEl = document.getElementById('liveClock');
-setInterval(() => {
-const vancouverTime = new Date().toLocaleString("ko-KR", {
-timeZone: "America/Vancouver",
-year: "numeric", month: "2-digit", day: "2-digit",
-hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
-});
-clockEl.innerText = 🇨🇦 밴쿠버 현지시각: ${vancouverTime};
-}, 1000);
-}
-function initializeMockChatTimeline() {
-const box = document.getElementById('chatMessagesTimeline');
-box.innerHTML = <div class="msg-line"><span style="color:var(--excel-green); font-weight:bold;">[시스템]</span> <span style="color:var(--text-muted);">보안 우회 채널 접속 완료. 안전한 탕비실 대화방입니다.</span></div>;
-mockConversations.forEach(text => {
-appendChatMessageRow(generateRandomAnonymousUser(), text);
-});
-setInterval(() => {
-if(Math.random() > 0.4) {
-const randomMsg = mockConversations[Math.floor(Math.random() * mockConversations.length)];
-appendChatMessageRow(generateRandomAnonymousUser(), randomMsg);
-}
-}, 5000);
-}
-function generateRandomAnonymousUser() {
-const prefix = randomNickPrefix[Math.floor(Math.random() * randomNickPrefix.length)];
-return ${prefix}_${Math.floor(Math.random() * 900 + 100)};
-}
-function appendChatMessageRow(user, text) {
-const box = document.getElementById('chatMessagesTimeline');
-const now = new Date();
-const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-const line = document.createElement('div');
-line.className = 'msg-line';
-line.innerHTML = <span class="msg-user">${user}:</span> <span>${text}</span><span class="msg-time">${timeStr}</span>;
-box.appendChild(line);
-box.scrollTop = box.scrollHeight;
-}
-function dispatchUserMessage() {
-const input = document.getElementById('chatInputField');
-const text = input.value.trim();
-if(text === '') return;
-appendChatMessageRow("나(루팡개미)", text);
-input.value = '';
-}
-function changeChatMode(mode) {
-const panel = document.getElementById('sideChatPanel');
-const title = document.getElementById('chatTitle');
-document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-panel.className = 'side-chat-panel';
-if(mode === 'normal') {
-document.getElementById('mBtnNorm').classList.add('active');
-title.innerText = "📋 밴쿠버 존버마을 실시간 탕비실";
-} else if(mode === 'teams') {
-document.getElementById('mBtnTeams').classList.add('active');
-panel.classList.add('teams-mode');
-title.innerText = "💬 일반 소통 채널 (글로벌 운영팀)";
-} else if(mode === 'kakao') {
-document.getElementById('mBtnKakao').classList.add('active');
-panel.classList.add('kakao-mode');
-title.innerText = "👨‍👩‍👧‍👦 가가호호 가족 단톡방";
-}
-}
-function switchTab(target) {
-document.getElementById('tabSheet').classList.remove('active');
-document.getElementById('tabCalc').classList.remove('active');
-document.getElementById('mainSheetPanel').style.display = 'none';
-document.getElementById('calcPagePanel').classList.remove('active');
-if(target === 'sheet') {
-document.getElementById('tabSheet').classList.add('active');
-document.getElementById('mainSheetPanel').style.display = 'block';
-} else if(target === 'calc') {
-document.getElementById('tabCalc').classList.add('active');
-document.getElementById('calcPagePanel').classList.add('active');
-}
-}
-function runCalculator(type) {
-if(type === 'fx') {
-const cad = parseFloat(document.getElementById('calcCad').value) || 0;
-document.getElementById('fxResult').innerText = 송금 수령액: 약 ${(cad * 1022.45).toLocaleString(undefined, {maximumFractionDigits:0})} 원;
-} else if(type === 'tip') {
-const price = parseFloat(document.getElementById('menuPrice').value) || 0;
-document.getElementById('tipResult').innerText = 최종 예상 결제액: $ ${(price * 1.20).toFixed(2)} (BC주 세금+팁 15%);
-} else if(type === 'stock') {
-const avgN = parseFloat(document.getElementById('avgNow').value) || 0;
-const qtyN = parseFloat(document.getElementById('qtyNow').value) || 0;
-const prcN = parseFloat(document.getElementById('priceNew').value) || 0;
-const qtyNew = parseFloat(document.getElementById('qtyNew').value) || 0;
-const finalAvg = (qtyN + qtyNew) > 0 ? (((avgN * qtyN) + (prcN * qtyNew)) / (qtyN + qtyNew)) : 0;
-document.getElementById('stockResult').innerText = 물타기 후 최종 평단가: $ ${finalAvg.toFixed(2)};
-}
-}
-
+        <thead>
+                <tr>
+                    <th class="col-idx"></th>
+                    <th class="col-a">A</th>
+                    <th class="col-b">B</th>
+                    <th class="col-c">C</th>
+                    <th class="col-d">D</th>
+                    <th>E (실시간 밴쿠버 교민 지표 요약 및 브리핑)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th class="row-num">1</th>
+                    <td colspan="5" class="section-title">[1. 실시간 밴쿠버 금융 환율 레이더]</td>
+                </tr>
+                <tr>
+                    <th class="row-num">2</th>
+                    <td class="font-bold text-center">CAD/KRW</td>
+                    <td>캐나다 달러 ➡️ 원화 송금</td>
+                    <td class="text-right font-bold">1,022.45</td>
+                    <td class="text-center up">▲ 3.15</td>
+                    <td style="color:var(--text-muted); font-size:9pt;">거래량: 12,504,000</td>
+                </tr>
+                <tr>
+                    <th class="row-num">3</th>
+                    <td class="font-bold text-center">USD/CAD</td>
+                    <td>미국 달러 ➡️ 캐나다 달러 환전</td>
+                    <td class="text-right font-bold">1.3842</td>
+                    <td class="text-center down">▼ 0.0021</td>
+                    <td style="color:var(--text-muted); font-size:9pt;">거래량: 8,421,000</td>
+                </tr>
+                <tr>
+                    <th class="row-num">4</th>
+                    <td colspan="5" class="section-title">[2. 캐나다 토론토 정규장 주요 지표 (TSX)]</td>
+                </tr>
+                <tr>
+                    <th class="row-num">5</th>
+                    <td class="font-bold text-center">VFV.TO</td>
+                    <td>Vanguard 미국 S&P500 (CAD)</td>
+                    <td class="text-right font-bold">142.35</td>
+                    <td class="text-center up">+0.58%</td>
+                    <td style="color:var(--text-muted); font-size:9pt;">거래량: 412,000</td>
+                </tr>
+                <tr>
+                    <th class="row-num">6</th>
+                    <td class="font-bold text-center">TD.TO</td>
+                    <td>TD Bank Group 캐나다 본주</td>
+                    <td class="text-right font-bold">78.42</td>
+                    <td class="text-center down">-1.15%</td>
+                    <td style="color:var(--text-muted); font-size:9pt;">거래량: 1,895,000</td>
+                </tr>
+                <tr>
+                    <th class="row-num">7</th>
+                    <td colspan="5" class="section-title">[3. 미국 뉴욕 정규장 주요 대형주]</td>
+                </tr>
+                <tr>
+                    <th class="row-num">8</th>
+                    <td class="font-bold text-center">NVDA</td>
+                    <td>Nvidia Corp (엔비디아)</td>
+                    <td class="text-right font-bold">145.26</td>
+                    <td class="text-center up">+3.42%</td>
+                    <td style="color:var(--text-muted); font-size:9pt;">거래량: 42,105,000</td>
+                </tr>
+                <tr>
+                    <th class="row-num">9</th>
+                    <td class="font-bold text-center">TSLA</td>
+                    <td>Tesla Inc (테슬라)</td>
+                    <td class="text-right font-bold">268.40</td>
+                    <td class="text-center up">+1.85%</td>
+                    <td style="color:var(--text-muted); font-size:9pt;">거래량: 19,540,000</td>
+                </tr>
+                <tr>
+                    <th class="row-num">10</th>
+                    <td colspan="5" class="section-title">[4. 글로벌 가상자산 시세]</td>
+                </tr>
+                <tr>
+                    <th class="row-num">11</th>
+                    <td class="font-bold text-center">BTC/USD</td>
+                    <td>Bitcoin (비트코인 실시간)</td>
+                    <td class="text-right font-bold">87,450.00</td>
+                    <td class="text-center up">+2.15%</td>
+                    <td style="color:var(--text-muted); font-size:9pt;">거래량: 45,210</td>
+                </tr>
+                <tr>
+                    <th class="row-num">12</th>
+                    <td colspan="5" class="section-title">[5. 메트로 밴쿠버 현지 인덱스 레이더]</td>
+                </tr>
+                <tr>
+                    <th class="row-num">13</th>
+                    <td class="font-bold text-center">WEATHER</td>
+                    <td>🌧️ 밴쿠버 실시간 기상청 예보</td>
+                    <td class="text-center font-bold">강수확률 90%</td>
+                    <td class="text-center up">우산 필수</td>
+                    <td style="color:var(--text-muted); font-size:9pt;">레인쿠버 시즌 돌입</td>
+                </tr>
+                <tr>
+                    <th class="row-num">14</th>
+                    <td class="font-bold text-center">SKYTRAIN</td>
+                    <td>🚇 TransLink 스카이트레인 현황</td>
+                    <td class="text-center font-bold">Expo/Millennium</td>
+                    <td class="text-center down">정상 운행</td>
+                    <td style="color:var(--text-muted); font-size:9pt;">지연 전산망 없음</td>
+                </tr>
+                <tr class="ad-row">
+                    <th class="row-num">15</th>
+                    <td class="font-bold text-center">[광고]</td>
+                    <td>이곳에 한줄 광고를 넣어주실 광고주를 모십니다.</td>
+                    <td class="text-center"><a href="mailto:hellohj98@://gmail.com[광고문의]" class="ad-link"><b>문의하기</b></a></td>
+                    <td class="text-center up">$100/월</td>
+                    <td style="color:var(--text-muted); font-size:9pt;">실시간 한인 전면 노출</td>
+                </tr>
+            </tbody>
