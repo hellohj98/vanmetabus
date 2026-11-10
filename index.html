@@ -2,112 +2,141 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>vancouver_brief.xlsx - Excel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vancouver_market_brief.xlsx - Excel</title>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f2f1; color: #323130; font-size: 11pt; }
-        .excel-menu { background-color: #107c41; color: white; padding: 10px 15px; font-weight: bold; display: flex; justify-content: space-between; }
-        .ribbon { background-color: #fff; border-bottom: 1px solid #d2d0ce; padding: 10px; display: flex; gap: 15px; font-size: 9pt; color: #605e5c; }
-        .formula-bar { background-color: #fff; border-bottom: 1px solid #d2d0ce; padding: 6px; display: flex; align-items: center; gap: 10px; }
-        .formula-bar span { font-weight: bold; color: #107c41; padding-left: 5px; }
-        .formula-input { border: 1px solid #d2d0ce; width: 80%; padding: 2px 5px; font-family: monospace; }
-        .grid-container { padding: 5px; overflow-x: auto; }
-        table { border-collapse: collapse; background: white; width: 100%; table-layout: fixed; }
-        th, td { border: 1px solid #d2d0ce; padding: 4px 8px; text-align: left; height: 22px; font-size: 10pt; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        th { background-color: #f3f2f1; font-weight: normal; text-align: center; color: #605e5c; width: 40px; }
-        .col-a { width: 160px; } .col-b { width: 100px; } .col-c { width: 100px; }
-        .up { color: #d83b01; font-weight: bold; } .down { color: #0078d4; font-weight: bold; }
+        :root {
+            --excel-green: #107c41;
+            --excel-dark-green: #0b592e;
+            --grid-border: #d2d0ce;
+            --bg-gray: #f3f2f1;
+            --text-main: #323130;
+            --text-muted: #605e5c;
+            --up-red: #d83b01;
+            --down-blue: #0078d4;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif; background-color: var(--bg-gray); color: var(--text-main); font-size: 11pt; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+        
+        /* 엑셀 최상단 타이틀 메뉴 바 */
+        .excel-header { background-color: var(--excel-green); color: white; padding: 6px 16px; font-size: 10.5pt; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+        .excel-header .menu-items { display: flex; gap: 18px; }
+        .excel-header .menu-items span { cursor: pointer; }
+        .excel-header .menu-items span.active { font-weight: bold; border-bottom: 2px solid white; }
+        .excel-header .user-profile { font-size: 9.5pt; opacity: 0.9; }
+
+        /* 엑셀 리본 메뉴 스타일 */
+        .ribbon-bar { background-color: white; border-bottom: 1px solid var(--grid-border); padding: 8px 16px; display: flex; gap: 24px; align-items: center; font-size: 9pt; color: var(--text-muted); user-select: none; }
+        .ribbon-group { display: flex; align-items: center; gap: 8px; border-right: 1px solid #edebe9; padding-right: 16px; }
+        .ribbon-group:last-child { border: none; }
+        .ribbon-btn { padding: 4px 6px; border: 1px solid transparent; background: transparent; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 2px; }
+        .ribbon-btn:hover { background-color: var(--bg-gray); border-color: var(--grid-border); }
+        .font-selector { border: 1px solid var(--grid-border); padding: 2px 4px; font-size: 8.5pt; }
+
+        /* 엑셀 수식 입력줄 */
+        .formula-bar { background-color: white; border-bottom: 1px solid var(--grid-border); padding: 4px 12px; display: flex; align-items: center; gap: 8px; font-size: 10pt; }
+        .formula-bar .cell-address { font-weight: bold; color: var(--excel-green); width: 45px; text-align: center; border-right: 1px solid var(--grid-border); }
+        .formula-bar .fx-icon { font-style: italic; font-weight: bold; color: #a19f9d; user-select: none; padding: 0 4px; }
+        .formula-input { border: 1px solid var(--grid-border); flex: 1; padding: 3px 8px; font-family: 'Consolas', monospace; font-size: 9.5pt; outline: none; }
+        .formula-input:focus { border-color: var(--excel-green); }
+
+        /* 메인 워크시트 컨테이너 레이아웃 (좌측 그리드 / 우측 고정 대화방) */
+        .workspace { flex: 1; display: flex; overflow: hidden; position: relative; }
+        .sheet-container { flex: 1; overflow: auto; background-color: white; position: relative; }
+        
+        /* 엑셀 스프레드시트 그리드 테이블 */
+        .excel-table { border-collapse: collapse; width: 100%; table-layout: fixed; background-color: white; }
+        .excel-table th, .excel-table td { border: 1px solid var(--grid-border); padding: 4px 8px; height: 24px; font-size: 10pt; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .excel-table th { background-color: var(--bg-gray); color: var(--text-muted); font-weight: normal; text-align: center; font-size: 9pt; user-select: none; position: sticky; top: 0; z-index: 10; }
+        .excel-table th.row-num { position: sticky; left: 0; background-color: var(--bg-gray); z-index: 11; width: 45px; }
+        .excel-table th:first-child { left: 0; top: 0; z-index: 12; }
+        
+        /* 구역별 칼럼 가로 폭 지정 */
+        .col-idx { width: 45px; }
+        .col-a { width: 160px; }
+        .col-b { width: 110px; }
+        .col-c { width: 95px; }
+        .col-d { width: 120px; }
+        
+        /* 유틸리티 스타일 클래스 */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .font-bold { font-weight: bold; }
+        .up { color: var(--up-red); font-weight: bold; }
+        .down { color: var(--down-blue); font-weight: bold; }
+        .section-title { background-color: #f3f9f5; font-weight: bold; }
         .ad-row { background-color: #fff2e6; font-weight: bold; }
+        .ad-link { color: var(--excel-green); text-decoration: underline; cursor: pointer; }
+        
+        /* 하단 탭 내비게이션 바 */
+        .sheet-tabs { background-color: var(--bg-gray); border-top: 1px solid var(--grid-border); padding: 0 8px; display: flex; align-items: center; height: 32px; user-select: none; }
+        .tab-btn { padding: 6px 16px; border: 1px solid transparent; background: transparent; font-size: 9.5pt; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; gap: 4px; height: 100%; border-top: none; }
+        .tab-btn.active { background-color: white; border-left: 1px solid var(--grid-border); border-right: 1px solid var(--grid-border); color: var(--excel-green); font-weight: bold; position: relative; }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background-color: var(--excel-green); }
+        .tab-separator { width: 1px; height: 16px; background-color: var(--grid-border); margin: 0 4px; }
+
+        /* 우측 도킹형 익명 대화방 (존버마을 탕비실 핵심) */
+        .side-chat-panel { width: 420px; border-left: 1px solid var(--grid-border); background-color: white; display: flex; flex-direction: column; overflow: hidden; transition: all 0.2s ease; }
+        .chat-header { background-color: var(--bg-gray); border-bottom: 1px solid var(--grid-border); padding: 8px 12px; font-size: 9.5pt; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .mode-selectors { display: flex; gap: 6px; }
+        .mode-btn { font-size: 8pt; padding: 2px 6px; border: 1px solid var(--grid-border); background: white; cursor: pointer; border-radius: 3px; }
+        .mode-btn.active { background: var(--excel-green); color: white; border-color: var(--excel-dark-green); }
+        
+        /* 실시간 채팅 메시지 창 스크롤 레이아웃 */
+        .chat-messages-box { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; background-color: #fafafa; }
+        .msg-line { font-size: 9.5pt; line-height: 1.4; word-break: break-all; }
+        .msg-user { color: var(--down-blue); font-weight: bold; cursor: pointer; }
+        .msg-time { color: #a19f9d; font-size: 8pt; margin-left: 6px; }
+        
+        /* 하단 메시지 입력 공간 */
+        .chat-footer { padding: 8px; border-top: 1px solid var(--grid-border); background: white; display: flex; gap: 6px; }
+        .chat-input-box { flex: 1; border: 1px solid var(--grid-border); padding: 6px 10px; font-size: 9.5pt; border-radius: 4px; outline: none; }
+        .chat-input-box:focus { border-color: var(--excel-green); }
+        .send-submit-btn { background: var(--excel-green); color: white; border: none; padding: 0 14px; font-size: 9.5pt; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        .send-submit-btn:hover { background: var(--excel-dark-green); }
+
+        /* 카카오톡 모드 위장 스타일 스위치 */
+        .side-chat-panel.kakao-mode { background-color: #bacee0; }
+        .side-chat-panel.kakao-mode .chat-header { background-color: #a2b7c4; color: #3c3d3f; border-bottom: 1px solid #92a7b4; }
+        .side-chat-panel.kakao-mode .chat-messages-box { background-color: #bacee0; }
+        .side-chat-panel.kakao-mode .msg-line { background: transparent; padding: 2px; }
+        .side-chat-panel.kakao-mode .msg-user { color: #1e1e1f; }
+
+        /* Teams 모드 위장 스타일 스위치 */
+        .side-chat-panel.teams-mode { background-color: #f5f5f5; }
+        .side-chat-panel.teams-mode .chat-header { background-color: #ffffff; border-bottom: 1px solid #e0e0e0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .side-chat-panel.teams-mode .chat-messages-box { background-color: #f5f5f5; }
+
+        /* 페이지 전환용 패널 상태 제어 */
+        .sub-page-panel { display: none; padding: 20px; height: 100%; overflow-y: auto; background: white; }
+        .sub-page-panel.active { display: block; }
+        .calculator-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 12px; }
+        .calc-card { border: 1px solid var(--grid-border); border-radius: 4px; padding: 12px; background: #fafafa; }
+        .calc-card h4 { margin: 0 0 8px 0; color: var(--excel-green); }
+        .calc-card input { width: 100%; border: 1px solid var(--grid-border); padding: 4px 8px; margin-bottom: 6px; font-size: 10pt; }
+        .calc-result { font-weight: bold; font-size: 10.5pt; margin-top: 4px; color: var(--up-red); }
     </style>
 </head>
 <body>
-    <div class="excel-menu">
-        <div>파일 &nbsp;&nbsp; 홈 &nbsp;&nbsp; 삽입 &nbsp;&nbsp; 수식 &nbsp;&nbsp; 데이터 &nbsp;&nbsp; 검토 &nbsp;&nbsp; 보기 &nbsp;&nbsp; <b>엑셀밴쿠버</b></div>
-        <div>vancouver_user@vancity.com</div>
+
+    <!-- [상단] 오리지널 엑셀 디자인 메뉴 바 -->
+    <div class="excel-header">
+        <div class="menu-items">
+            <span onclick="switchTab('sheet')">파일</span>
+            <span class="active" onclick="switchTab('sheet')">홈</span>
+            <span onclick="switchTab('sheet')">삽입</span>
+            <span onclick="switchTab('sheet')">수식</span>
+            <span onclick="switchTab('sheet')">데이터</span>
+            <span onclick="switchTab('calc')">⚙️ 미니앱/계산기</span>
+            <span onclick="alert('서버 점검 완료! 정상 작동중입니다.')">도움말</span>
+            <span style="color: #ffeb3b; font-weight: bold;">[엑셀밴쿠버 존버마을]</span>
+        </div>
+        <div class="user-profile">van_ル팡개미@vancity.com</div>
     </div>
-    <div class="ribbon">
-        <div>📋 붙여넣기</div><div>맑은 고딕 ▾ 11 ▾</div><div><b>가</b> <i>가</i> <u>밑줄</u></div><div>정렬 ▾</div><div>표시 형식 ▾</div>
-    </div>
-    <div class="formula-bar">
-        <span>fx</span>
-        <input type="text" class="formula-input" value="=VANCOUVER_MARKET_BRIEF(LIVE)">
-    </div>
-    <div class="grid-container">
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th class="col-a">A</th>
-                    <th class="col-b">B</th>
-                    <th class="col-c">C</th>
-                    <th>D (실시간 밴쿠버 한인 익명 대화방)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>1</th>
-                    <td><b>[시장 지표]</b></td>
-                    <td></td>
-                    <td></td>
-                    <td><b>[익명 탕비실 주식/생활 토크]</b></td>
-                </tr>
-                <tr>
-                    <th>2</th>
-                    <td>CAD/KRW 환율</td>
-                    <td>1,020.50</td>
-                    <td class="up">▲ 2.10</td>
-                    <td><i>익명_버나비:</i> 오늘 랍슨 H-마트 줄 많이 서있나요?</td>
-                </tr>
-                <tr>
-                    <th>3</th>
-                    <td>USD/CAD 환율</td>
-                    <td>1.3850</td>
-                    <td class="down">▼ 0.0015</td>
-                    <td><i>익명_코퀴:</i> 테슬라 장전 프리마켓 폭등중인데 탑승하신 분 계심?</td>
-                </tr>
-                <tr>
-                    <th>4</th>
-                    <td><b>[북미 주요 주식]</b></td>
-                    <td></td>
-                    <td></td>
-                    <td><i>익명_다운타운:</i> 와 매니저 뒤로 지나가는데 이 사이트가 내 목숨 살림 ㅋㅋㅋ</td>
-                </tr>
-                <tr>
-                    <th>5</th>
-                    <td>VFV (S&P 500)</td>
-                    <td>$142.30</td>
-                    <td class="up">+0.45%</td>
-                    <td><i>익명_리치먼드:</i> 이거 진짜 일하는 문서 같아서 대박이네요 아이디어 굳</td>
-                </tr>
-                <tr>
-                    <th>6</th>
-                    <td>TD.TO (TD Bank)</td>
-                    <td>$78.20</td>
-                    <td class="down">-1.20%</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>7</th>
-                    <td>NVDA (Nvidia)</td>
-                    <td>$145.20</td>
-                    <td class="up">+3.20%</td>
-                    <td><b>[밴쿠버 날씨 및 교통 레이더]</b></td>
-                </tr>
-                <tr class="ad-row">
-                    <th>8</th>
-                    <td><b>[광고] 밴쿠버 한인 광고 구역</b></td>
-                    <td><a href="mailto:본인이메일@://gmail.com[엑셀밴쿠버 광고 문의]" style="color: #107c41; text-decoration: underline; cursor: pointer;"><b>문의하기</b></a></td>
-                    <td><b>$10/월</b></td>
-                    <td>🌧️ 현재 날씨: 오후 3시부터 비 예보. 우산 꼭 챙기세요!</td>
-                </tr>
-                <tr>
-                    <th>9</th>
-                    <td>BTC/USD</td>
-                    <td>$87,450.00</td>
-                    <td class="up">+1.15%</td>
-                    <td>🚇 스카이트레인: 엑스포 라인 현재 정상 운행 중</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+
+    <!-- [상단] 기능 리본 바 -->
+    <div class="ribbon-bar">
+        <div class="ribbon-group">
+            <button class="ribbon-btn" onclick="location.reload();">🔄 새로고침</button>
+            <button class="ribbon-btn" onclick="toggleViewMode('excel')">📊 엑셀표 보기</button>
+        </div>
