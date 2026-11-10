@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>vancouver_brief.xlsx - Excel</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f2f1; color: #323130; font-size: 11pt; }
+        .excel-menu { background-color: #107c41; color: white; padding: 10px 15px; font-weight: bold; display: flex; justify-content: space-between; }
+        .ribbon { background-color: #fff; border-bottom: 1px solid #d2d0ce; padding: 10px; display: flex; gap: 15px; font-size: 9pt; color: #605e5c; }
+        .formula-bar { background-color: #fff; border-bottom: 1px solid #d2d0ce; padding: 6px; display: flex; align-items: center; gap: 10px; }
+        .formula-bar span { font-weight: bold; color: #107c41; padding-left: 5px; }
+        .formula-input { border: 1px solid #d2d0ce; width: 80%; padding: 2px 5px; font-family: monospace; }
+        .grid-container { padding: 5px; overflow-x: auto; }
+        table { border-collapse: collapse; background: white; width: 100%; table-layout: fixed; }
+        th, td { border: 1px solid #d2d0ce; padding: 4px 8px; text-align: left; height: 22px; font-size: 10pt; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        th { background-color: #f3f2f1; font-weight: normal; text-align: center; color: #605e5c; width: 40px; }
+        .col-a { width: 160px; } .col-b { width: 100px; } .col-c { width: 100px; }
+        .up { color: #d83b01; font-weight: bold; } .down { color: #0078d4; font-weight: bold; }
+        .ad-row { background-color: #fff2e6; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="excel-menu">
+        <div>파일 &nbsp;&nbsp; 홈 &nbsp;&nbsp; 삽입 &nbsp;&nbsp; 수식 &nbsp;&nbsp; 데이터 &nbsp;&nbsp; 검토 &nbsp;&nbsp; 보기 &nbsp;&nbsp; <b>엑셀밴쿠버</b></div>
+        <div>vancouver_user@vancity.com</div>
+    </div>
+    <div class="ribbon">
+        <div>📋 붙여넣기</div><div>맑은 고딕 ▾ 11 ▾</div><div><b>가</b> <i>가</i> <u>밑줄</u></div><div>정렬 ▾</div><div>표시 형식 ▾</div>
+    </div>
+    <div class="formula-bar">
+        <span>fx</span>
+        <input type="text" class="formula-input" value="=VANCOUVER_MARKET_BRIEF(LIVE)">
+    </div>
+    <div class="grid-container">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="col-a">A</th>
+                    <th class="col-b">B</th>
+                    <th class="col-c">C</th>
+                    <th>D (실시간 밴쿠버 한인 익명 대화방)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>1</th>
+                    <td><b>[시장 지표]</b></td>
+                    <td></td>
+                    <td></td>
+                    <td><b>[익명 탕비실 주식/생활 토크]</b></td>
+                </tr>
+                <tr>
+                    <th>2</th>
+                    <td>CAD/KRW 환율</td>
+                    <td>1,020.50</td>
+                    <td class="up">▲ 2.10</td>
+                    <td><i>익명_버나비:</i> 오늘 랍슨 H-마트 줄 많이 서있나요?</td>
+                </tr>
+                <tr>
+                    <th>3</th>
+                    <td>USD/CAD 환율</td>
+                    <td>1.3850</td>
+                    <td class="down">▼ 0.0015</td>
+                    <td><i>익명_코퀴:</i> 테슬라 장전 프리마켓 폭등중인데 탑승하신 분 계심?</td>
+                </tr>
+                <tr>
+                    <th>4</th>
+                    <td><b>[북미 주요 주식]</b></td>
+                    <td></td>
+                    <td></td>
+                    <td><i>익명_다운타운:</i> 와 매니저 뒤로 지나가는데 이 사이트가 내 목숨 살림 ㅋㅋㅋ</td>
+                </tr>
+                <tr>
+                    <th>5</th>
+                    <td>VFV (S&P 500)</td>
+                    <td>$142.30</td>
+                    <td class="up">+0.45%</td>
+                    <td><i>익명_리치먼드:</i> 이거 진짜 일하는 문서 같아서 대박이네요 아이디어 굳</td>
+                </tr>
+                <tr>
+                    <th>6</th>
+                    <td>TD.TO (TD Bank)</td>
+                    <td>$78.20</td>
+                    <td class="down">-1.20%</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>7</th>
+                    <td>NVDA (Nvidia)</td>
+                    <td>$145.20</td>
+                    <td class="up">+3.20%</td>
+                    <td><b>[밴쿠버 날씨 및 교통 레이더]</b></td>
+                </tr>
+                <tr class="ad-row">
+                    <th>8</th>
+                    <td><b>[광고] 밴쿠버 한인 광고 구역</b></td>
+                    <td><b>문의하기</b></td>
+                    <td><b>$100/월</b></td>
+                    <td>🌧️ 현재 날씨: 오후 3시부터 비 예보. 우산 꼭 챙기세요!</td>
+                </tr>
+                <tr>
+                    <th>9</th>
+                    <td>BTC/USD</td>
+                    <td>$87,450.00</td>
+                    <td class="up">+1.15%</td>
+                    <td>🚇 스카이트레인: 엑스포 라인 현재 정상 운행 중</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
